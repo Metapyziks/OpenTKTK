@@ -29,6 +29,21 @@ namespace OpenTKTK.Scene
     /// </summary>
     public class Camera
     {
+        public enum PositionComponent
+        {
+            X = 1,
+            Y = 2,
+            Z = 4,
+            All = X | Y | Z
+        }
+
+        public enum RotationComponent
+        {
+            Pitch = 1,
+            Yaw = 2,
+            All = Pitch | Yaw
+        }
+
         #region Private Fields
         private bool _perspectiveChanged;
         private bool _viewChanged;
@@ -102,7 +117,46 @@ namespace OpenTKTK.Scene
             set
             {
                 _position = value;
-                _viewChanged = true;
+                OnPositionChanged(PositionComponent.All);
+            }
+        }
+
+        /// <summary>
+        /// X component of the camera's position in the world.
+        /// </summary>
+        public float X
+        {
+            get { return _position.X; }
+            set
+            {
+                _position.X = value;
+                OnPositionChanged(PositionComponent.X);
+            }
+        }
+
+        /// <summary>
+        /// Y component of the camera's position in the world.
+        /// </summary>
+        public float Y
+        {
+            get { return _position.Y; }
+            set
+            {
+                _position.Y = value;
+                OnPositionChanged(PositionComponent.Y);
+            }
+        }
+
+        /// <summary>
+        /// Z component of the camera's position in the world.
+        /// </summary>
+        public float Z
+        {
+            get { return _position.Z; }
+            set
+            {
+                _position.Z = value;
+                OnPositionChanged(PositionComponent.Z);
             }
         }
 
@@ -116,7 +170,7 @@ namespace OpenTKTK.Scene
             set
             {
                 _rotation = value;
-                _viewChanged = true;
+                OnRotationChanged(RotationComponent.All);
             }
         }
 
@@ -129,7 +183,7 @@ namespace OpenTKTK.Scene
             set
             {
                 _rotation.X = value;
-                _viewChanged = true;
+                OnRotationChanged(RotationComponent.Pitch);
             }
         }
 
@@ -142,7 +196,7 @@ namespace OpenTKTK.Scene
             set
             {
                 _rotation.Y = value;
-                _viewChanged = true;
+                OnRotationChanged(RotationComponent.Yaw);
             }
         }
 
@@ -201,6 +255,14 @@ namespace OpenTKTK.Scene
         }
 
         /// <summary>
+        /// Mark the perspective matrix as requiring an update.
+        /// </summary>
+        protected void InvalidatePerspectiveMatrix()
+        {
+            _perspectiveChanged = true;
+        }
+
+        /// <summary>
         /// Update the perspective matrix to reflect a change in viewport dimensions.
         /// </summary>
         private void UpdatePerspectiveMatrix()
@@ -213,6 +275,14 @@ namespace OpenTKTK.Scene
                 (float) Width / Height, 1f / 64f, 256f);
 
             UpdateCombinedMatrix();
+        }
+
+        /// <summary>
+        /// Mark the view matrix as requiring an update.
+        /// </summary>
+        protected void InvalidateViewMatrix()
+        {
+            _viewChanged = true;
         }
 
         /// <summary>
@@ -238,6 +308,16 @@ namespace OpenTKTK.Scene
         private void UpdateCombinedMatrix()
         {
             _combinedMatrix = Matrix4.Mult(_viewMatrix, _perspectiveMatrix);
+        }
+
+        protected virtual void OnPositionChanged(PositionComponent component)
+        {
+            _viewChanged = true;
+        }
+
+        protected virtual void OnRotationChanged(RotationComponent component)
+        {
+            _viewChanged = true;
         }
     }
 }
