@@ -84,7 +84,7 @@ namespace OpenTKTK.Scene
         /// View matrix that encodes the transformation from world-space
         /// to eye-space.
         /// </summary>
-        public Matrix4 Viewmatrix
+        public Matrix4 ViewMatrix
         {
             get
             {
@@ -312,7 +312,7 @@ namespace OpenTKTK.Scene
         /// outputs the new view matrix.
         /// </summary>
         /// <param name="matrix">The new up-to-date matrix</param>
-        protected void OnUpdateViewMatrix(ref Matrix4 matrix)
+        protected virtual void OnUpdateViewMatrix(ref Matrix4 matrix)
         {
             Matrix4 yRot = Matrix4.CreateRotationY(_rotation.Y);  // yaw rotation
             Matrix4 xRot = Matrix4.CreateRotationX(_rotation.X);  // pitch rotation
