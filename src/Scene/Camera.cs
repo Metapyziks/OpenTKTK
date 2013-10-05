@@ -47,6 +47,7 @@ namespace OpenTKTK.Scene
         #region Private Fields
         private bool _perspectiveChanged;
         private bool _viewChanged;
+        private bool _combinedChanged;
 
         private Matrix4 _perspectiveMatrix;
         private Matrix4 _viewMatrix;
@@ -103,6 +104,7 @@ namespace OpenTKTK.Scene
             {
                 if (_perspectiveChanged) UpdatePerspectiveMatrix();
                 if (_viewChanged) UpdateViewMatrix();
+                if (_combinedChanged) UpdateCombinedMatrix();
 
                 return _combinedMatrix;
             }
@@ -237,8 +239,8 @@ namespace OpenTKTK.Scene
             Position = new Vector3();
             Rotation = new Vector2();
 
-            _perspectiveChanged = true;
-            _viewChanged = true;
+            InvalidatePerspectiveMatrix();
+            InvalidateViewMatrix();
         }
 
         /// <summary>
@@ -251,15 +253,16 @@ namespace OpenTKTK.Scene
             Width = width;
             Height = height;
 
-            _perspectiveChanged = true;
+            InvalidatePerspectiveMatrix();
         }
 
         /// <summary>
         /// Mark the perspective matrix as requiring an update.
         /// </summary>
-        protected void InvalidatePerspectiveMatrix()
+        public void InvalidatePerspectiveMatrix()
         {
             _perspectiveChanged = true;
+            _combinedChanged = true;
         }
 
         /// <summary>
@@ -269,20 +272,29 @@ namespace OpenTKTK.Scene
         {
             _perspectiveChanged = false;
 
+            OnUpdatePerspectiveMatrix(ref _perspectiveMatrix);
+        }
+
+        /// <summary>
+        /// Method called when a perspective matrix update should be performed, which
+        /// outputs the new perspective matrix.
+        /// </summary>
+        /// <param name="matrix">The new up-to-date matrix</param>
+        protected virtual void OnUpdatePerspectiveMatrix(ref Matrix4 matrix)
+        {
             // Set up a perspective matrix with a 60 degree FOV, the aspect ratio
             // of the current viewport dimensions, some arbitrary depth clip planes
-            _perspectiveMatrix = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver3,
+            matrix = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver3,
                 (float) Width / Height, 1f / 64f, 256f);
-
-            UpdateCombinedMatrix();
         }
 
         /// <summary>
         /// Mark the view matrix as requiring an update.
         /// </summary>
-        protected void InvalidateViewMatrix()
+        public void InvalidateViewMatrix()
         {
             _viewChanged = true;
+            _combinedChanged = true;
         }
 
         /// <summary>
@@ -292,14 +304,22 @@ namespace OpenTKTK.Scene
         {
             _viewChanged = false;
 
+            OnUpdateViewMatrix(ref _viewMatrix);
+        }
+
+        /// <summary>
+        /// Method called when a view matrix update should be performed, which
+        /// outputs the new view matrix.
+        /// </summary>
+        /// <param name="matrix">The new up-to-date matrix</param>
+        protected void OnUpdateViewMatrix(ref Matrix4 matrix)
+        {
             Matrix4 yRot = Matrix4.CreateRotationY(_rotation.Y);  // yaw rotation
             Matrix4 xRot = Matrix4.CreateRotationX(_rotation.X);  // pitch rotation
             Matrix4 trns = Matrix4.CreateTranslation(-_position); // position offset
 
             // Combine the matrices to find the view transformation
-            _viewMatrix = Matrix4.Mult(trns, Matrix4.Mult(yRot, xRot));
-
-            UpdateCombinedMatrix();
+            matrix = Matrix4.Mult(trns, Matrix4.Mult(yRot, xRot));
         }
 
         /// <summary>
@@ -307,6 +327,8 @@ namespace OpenTKTK.Scene
         /// </summary>
         private void UpdateCombinedMatrix()
         {
+            _combinedChanged = false;
+
             _combinedMatrix = Matrix4.Mult(_viewMatrix, _perspectiveMatrix);
         }
 
@@ -317,7 +339,7 @@ namespace OpenTKTK.Scene
         /// that were modified</param>
         protected virtual void OnPositionChanged(PositionComponent component)
         {
-            _viewChanged = true;
+            InvalidateViewMatrix();
         }
 
         /// <summary>
@@ -327,7 +349,7 @@ namespace OpenTKTK.Scene
         /// that were modified</param>
         protected virtual void OnRotationChanged(RotationComponent component)
         {
-            _viewChanged = true;
+            InvalidateViewMatrix();
         }
     }
 }
