@@ -332,14 +332,24 @@ namespace OpenTKTK.Scene
             _combinedMatrix = Matrix4.Mult(_viewMatrix, _perspectiveMatrix);
         }
 
+        private void OnPositionChanged(PositionComponent component)
+        {
+            OnPositionChanged(component, ref _position);
+        }
+
         /// <summary>
         /// Method called when the camera's position has been modified.
         /// </summary>
         /// <param name="component">The component(s) of the camera's position
         /// that were modified</param>
-        protected virtual void OnPositionChanged(PositionComponent component)
+        protected virtual void OnPositionChanged(PositionComponent component, ref Vector3 position)
         {
             InvalidateViewMatrix();
+        }
+
+        private void OnRotationChanged(RotationComponent component)
+        {
+            OnRotationChanged(component, ref _rotation);
         }
 
         /// <summary>
@@ -347,7 +357,7 @@ namespace OpenTKTK.Scene
         /// </summary>
         /// <param name="component">The component(s) of the camera's rotation
         /// that were modified</param>
-        protected virtual void OnRotationChanged(RotationComponent component)
+        protected virtual void OnRotationChanged(RotationComponent component, ref Vector2 rotation)
         {
             InvalidateViewMatrix();
         }
