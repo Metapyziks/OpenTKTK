@@ -29,6 +29,9 @@ namespace OpenTKTK.Scene
     /// </summary>
     public class Camera
     {
+        /// <summary>
+        /// Enumeration of positional components.
+        /// </summary>
         public enum PositionComponent
         {
             X = 1,
@@ -37,6 +40,9 @@ namespace OpenTKTK.Scene
             All = X | Y | Z
         }
 
+        /// <summary>
+        /// Enumeration of rotational components.
+        /// </summary>
         public enum RotationComponent
         {
             Pitch = 1,
