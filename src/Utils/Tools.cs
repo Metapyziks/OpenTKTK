@@ -64,7 +64,7 @@ namespace OpenTKTK.Utils
             if (ec != ErrorCode.NoError) {
                 // Print the current call stack to the debug output,
                 // then throw an exception
-                var trace = new StackTrace();
+                var trace = new StackTrace(1);
                 Debug.WriteLine(ec.ToString() + " at " + loc + Environment.NewLine + trace.ToString());
                 throw new Exception(ec.ToString() + " at " + loc);
             }
