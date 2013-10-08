@@ -32,7 +32,6 @@ namespace OpenTKTK.Utils
     public sealed class VertexBuffer : IDisposable
     {
         #region Private Fields
-        private int _stride;
         private BufferUsageHint _usageHint;
 
         private int _unitSize;
@@ -60,10 +59,7 @@ namespace OpenTKTK.Utils
         /// <summary>
         /// Number of floats per vertex in the VBO.
         /// </summary>
-        public int Stride
-        {
-            get { return _stride; }
-        }
+        public int Stride { get; private set; }
 
         /// <summary>
         /// Constructor to create a new VertexBuffer instance.
@@ -71,7 +67,8 @@ namespace OpenTKTK.Utils
         /// <param name="stride">The number of floats per vertex</param>
         public VertexBuffer(int stride, BufferUsageHint usageHint = BufferUsageHint.StaticDraw)
         {
-            _stride = stride;
+            Stride = stride;
+
             _usageHint = usageHint;
 
             _vboID = 0;
@@ -87,7 +84,7 @@ namespace OpenTKTK.Utils
         {
             // Calculate size metrics of the data
             _unitSize = Marshal.SizeOf(typeof(T));
-            _length = vertices.Length / _stride;
+            _length = vertices.Length / Stride;
 
             // Bind the VBO, populate it, then unbind
             GL.BindBuffer(BufferTarget.ArrayBuffer, VboID);
@@ -95,7 +92,7 @@ namespace OpenTKTK.Utils
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
 
             // Check that nothing went wrong
-            // Tools.ErrorCheck("setdata");
+            Tools.ErrorCheck("setdata");
 
             // Record that the VBO now has data, and may be drawn to
             _dataSet = true;

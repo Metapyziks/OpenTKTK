@@ -27,6 +27,7 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 
 using OpenTKTK.Textures;
+using OpenTKTK.Utils;
 
 namespace OpenTKTK.Shaders
 {
@@ -276,7 +277,7 @@ namespace OpenTKTK.Shaders
 
             OnCreate();
 
-            // Tools.ErrorCheck("create");
+            Tools.ErrorCheck("create");
         }
 
         protected virtual void OnCreate()
@@ -307,7 +308,7 @@ namespace OpenTKTK.Shaders
             VertexDataSize += info.Size;
             _attributes.Add(info);
 
-            // Tools.ErrorCheck("addattrib:" + identifier);
+            Tools.ErrorCheck("addattrib:" + identifier);
         }
 
         protected void AddUnusedAttribute(int size, VertexAttribPointerType pointerType = VertexAttribPointerType.Float)
@@ -325,19 +326,19 @@ namespace OpenTKTK.Shaders
                 (TextureUnit) Enumerable.Range((int) TextureUnit.Texture0, 16).First(x =>
                     _textures.Count(y => y.Value.TextureUnit == (TextureUnit) x) == 0)));
 
-            // Tools.ErrorCheck("addtexture");
+            Tools.ErrorCheck("addtexture");
         }
 
         public void SetTexture(String identifier, Texture texture)
         {
             if (Started && Immediate) {
                 GL.End();
-                // Tools.ErrorCheck("end");
+                Tools.ErrorCheck("end");
             }
 
             _textures[identifier].SetCurrentTexture(texture);
 
-            // Tools.ErrorCheck("settexture");
+            Tools.ErrorCheck("settexture");
 
             if (Started && Immediate)
                 GL.Begin(BeginMode);
@@ -398,10 +399,13 @@ namespace OpenTKTK.Shaders
 
         public void Begin(bool immediateMode)
         {
+            Immediate = immediateMode;
+            Started = true;
+
             Use();
             OnBegin();
 
-            // Tools.ErrorCheck("begin");
+            Tools.ErrorCheck("begin");
 
             if (immediateMode) {
                 GL.Begin(BeginMode);
@@ -413,9 +417,6 @@ namespace OpenTKTK.Shaders
                     GL.EnableVertexAttribArray(info.Location);
                 }
             }
-
-            Immediate = immediateMode;
-            Started = true;
         }
 
         protected virtual void OnBegin() { }
@@ -434,7 +435,7 @@ namespace OpenTKTK.Shaders
 
             OnEnd();
 
-            // Tools.ErrorCheck("end");
+            Tools.ErrorCheck("end");
         }
 
         protected virtual void OnEnd() { }
