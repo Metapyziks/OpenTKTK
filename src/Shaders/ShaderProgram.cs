@@ -172,36 +172,39 @@ namespace OpenTKTK.Shaders
             _sVersionChecked = true;
         }
 
-        public int VertexDataStride;
-        public int VertexDataSize;
+        public int VertexDataStride { get; private set; }
+        public int VertexDataSize { get; private set; }
 
         private List<AttributeInfo> _attributes;
         private Dictionary<String, TextureInfo> _textures;
         private Dictionary<String, int> _uniforms;
 
-        private bool _immediate;
-        private bool _started;
-
         public int Program { get; private set; }
 
-        public BeginMode BeginMode;
-        public String VertexSource;
-        public String FragmentSource;
+        public BeginMode BeginMode { get; protected set; }
+        public String VertexSource { get; protected set; }
+        public String FragmentSource { get; protected set; }
 
         public bool Active
         {
             get { return _sCurProgram == this; }
         }
 
+        public bool Immediate { get; protected set; }
+        public bool Started { get; protected set; }
+
         public ShaderProgram()
         {
             BeginMode = BeginMode.Triangles;
+
             _attributes = new List<AttributeInfo>();
             _textures = new Dictionary<String, TextureInfo>();
             _uniforms = new Dictionary<String, int>();
+
             VertexDataStride = 0;
             VertexDataSize = 0;
-            _started = false;
+
+            Started = false;
         }
 
         public void Create()
@@ -293,7 +296,7 @@ namespace OpenTKTK.Shaders
 
         public void SetTexture(String identifier, Texture texture)
         {
-            if (_started && _immediate) {
+            if (Started && Immediate) {
                 GL.End();
                 // Tools.ErrorCheck("end");
             }
@@ -302,7 +305,7 @@ namespace OpenTKTK.Shaders
 
             // Tools.ErrorCheck("settexture");
 
-            if (_started && _immediate)
+            if (Started && Immediate)
                 GL.Begin(BeginMode);
         }
 
@@ -377,17 +380,17 @@ namespace OpenTKTK.Shaders
                 }
             }
 
-            _immediate = immediateMode;
-            _started = true;
+            Immediate = immediateMode;
+            Started = true;
         }
 
         protected virtual void OnBegin() { }
 
         public void End()
         {
-            _started = false;
+            Started = false;
 
-            if (_immediate) {
+            if (Immediate) {
                 GL.End();
             } else {
                 foreach (AttributeInfo info in _attributes) {
@@ -404,11 +407,11 @@ namespace OpenTKTK.Shaders
 
         public virtual void Render(float[] data)
         {
-            if (!_started) {
+            if (!Started) {
                 throw new Exception("Must call Begin() first!");
             }
 
-            if (!_immediate) {
+            if (!Immediate) {
                 throw new Exception("Must use immediate mode!");
             }
 
