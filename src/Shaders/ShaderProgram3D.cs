@@ -26,9 +26,6 @@ namespace OpenTKTK.Shaders
     public class ShaderProgram3D<T> : ShaderProgram
         where T : Camera
     {
-        public int ScreenWidth { get; private set; }
-        public int ScreenHeight { get; private set; }
-
         public T Camera { get; set; }
 
         protected override void OnCreate()

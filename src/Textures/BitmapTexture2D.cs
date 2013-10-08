@@ -103,6 +103,21 @@ namespace OpenTKTK.Textures
             : this(new Bitmap(width, height)) { }
 
         /// <summary>
+        /// Finds the actual texel coordinates for images that are not a power-of-two
+        /// size, and have therefore been expanded.
+        /// </summary>
+        /// <param name="x">Horizontal position of the texel</param>
+        /// <param name="y">Vertical position of the texel</param>
+        /// <returns></returns>
+        public Vector2 GetCoords(float x, float y)
+        {
+            return new Vector2 {
+                X = x / _actualSize,
+                Y = y / _actualSize
+            };
+        }
+
+        /// <summary>
         /// Load the texture into video memory.
         /// </summary>
         protected override void Load()

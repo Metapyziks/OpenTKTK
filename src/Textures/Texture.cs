@@ -17,6 +17,7 @@
  * along with OpenTKTK. If not, see <http://www.gnu.org/licenses/>.
  */
 
+using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
 namespace OpenTKTK.Textures
