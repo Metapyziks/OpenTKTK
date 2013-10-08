@@ -344,6 +344,11 @@ namespace OpenTKTK.Shaders
                 GL.Begin(BeginMode);
         }
 
+        protected int GetUniformLocation(String identifier)
+        {
+            return GL.GetUniformLocation(Program, identifier);
+        }
+
         protected void AddUniform(String identifier)
         {
             _uniforms.Add(identifier, GL.GetUniformLocation(Program, identifier));

@@ -37,6 +37,8 @@ namespace OpenTKTK.Shaders
 
         protected override void OnBegin()
         {
+            base.OnBegin();
+
             if (Camera != null) {
                 Matrix4 viewMat = Camera.CombinedMatrix;
                 SetUniform("vp_matrix", ref viewMat);
