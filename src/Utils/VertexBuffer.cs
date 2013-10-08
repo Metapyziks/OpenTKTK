@@ -94,7 +94,7 @@ namespace OpenTKTK.Utils
             // Check that nothing went wrong
             Tools.ErrorCheck("setdata");
 
-            // Record that the VBO now has data, and may be drawn to
+            // Record that the VBO now has data, and may be drawn from
             _dataSet = true;
         }
 

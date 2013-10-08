@@ -24,6 +24,8 @@ using System.Drawing.Imaging;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
+using OpenTKTK.Utils;
+
 namespace OpenTKTK.Textures
 {
     /// <summary>
@@ -129,15 +131,15 @@ namespace OpenTKTK.Textures
 
             // This probably doesn't belong here - set the texture
             // filter and edge wrap modes
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int) TextureMinFilter.LinearMipmapLinear);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int) TextureMagFilter.Linear);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int) TextureMinFilter.LinearMipmapNearest);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int) TextureMagFilter.Nearest);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapR, (int) TextureWrapMode.Repeat);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int) TextureWrapMode.Repeat);
 
             // Generate mipmap levels from the new texture
             GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
 
-            // Tools.ErrorCheck("loadtexture");
+            Tools.ErrorCheck("loadtexture");
         }
     }
 }
