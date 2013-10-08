@@ -133,6 +133,36 @@ namespace OpenTKTK.Shaders
             }
         }
 
+        public class AttributeCollection : IEnumerable<AttributeInfo>
+        {
+            private ShaderProgram _shader;
+
+            internal AttributeCollection(ShaderProgram shader)
+            {
+                _shader = shader;
+            }
+
+            public AttributeInfo this[int index]
+            {
+                get { return _shader._attributes[index]; }
+            }
+
+            public AttributeInfo this[String ident]
+            {
+                get { return _shader._attributes.First(x => x.Identifier == ident); }
+            }
+
+            public IEnumerator<AttributeInfo> GetEnumerator()
+            {
+                return _shader._attributes.GetEnumerator();
+            }
+
+            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+            {
+                return _shader._attributes.GetEnumerator();
+            }
+        }
+
         private static bool _sVersionChecked;
         private static bool _sGL3;
         private static bool _sNVidiaCard = false;
@@ -193,6 +223,8 @@ namespace OpenTKTK.Shaders
         public bool Immediate { get; protected set; }
         public bool Started { get; protected set; }
 
+        public AttributeCollection Attributes { get; private set; }
+
         public ShaderProgram()
         {
             BeginMode = BeginMode.Triangles;
@@ -203,6 +235,8 @@ namespace OpenTKTK.Shaders
 
             VertexDataStride = 0;
             VertexDataSize = 0;
+
+            Attributes = new AttributeCollection(this);
 
             Started = false;
         }
