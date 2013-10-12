@@ -141,5 +141,11 @@ namespace OpenTKTK.Textures
 
             Tools.ErrorCheck("loadtexture");
         }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+            Bitmap.Dispose();
+        }
     }
 }

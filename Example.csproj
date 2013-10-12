@@ -4,15 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0FC36AF8-BB55-403B-A82D-F0D852C40426}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{61519734-88EE-4754-8C85-C6A7AEAE5EEB}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OpenTKTK</RootNamespace>
-    <AssemblyName>OpenTKTK</AssemblyName>
+    <RootNamespace>Example</RootNamespace>
+    <AssemblyName>Example</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -29,9 +31,13 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenTK">
-      <HintPath>libs\OpenTK.dll</HintPath>
+    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\OpenTKTK\libs\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -43,34 +49,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\Scene\Camera.cs" />
-    <Compile Include="src\Scene\Model.cs" />
-    <Compile Include="src\Scene\Sprite.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="src\Scene\Text.cs" />
-    <Compile Include="src\Shaders\ShaderProgram.cs" />
-    <Compile Include="src\Shaders\ShaderProgram2D.cs" />
-    <Compile Include="src\Shaders\ShaderProgram3D.cs" />
-    <Compile Include="src\Shaders\SpriteShader.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="src\Textures\AlphaTexture2D.cs" />
-    <Compile Include="src\Textures\BitmapTexture2D.cs" />
-    <Compile Include="src\Textures\CubeMapTexture.cs" />
-    <Compile Include="src\Textures\Texture.cs" />
-    <Compile Include="src\Utils\FrameBuffer.cs" />
-    <Compile Include="src\Utils\ShaderBuilder.cs" />
-    <Compile Include="src\Utils\Tools.cs" />
-    <Compile Include="src\Utils\VertexBuffer.cs" />
-  </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <None Include="README.md" />
+    <Compile Include="src\Example\Program.cs" />
+    <Compile Include="Properties\ExampleAssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include=".gitignore" />
+    <ProjectReference Include="OpenTKTK.csproj">
+      <Project>{0fc36af8-bb55-403b-a82d-f0d852c40426}</Project>
+      <Name>OpenTKTK</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -151,7 +151,7 @@ namespace OpenTKTK.Utils
         {
             // If the VBO has been created, delete it
             if (_vboID != 0) {
-                GL.DeleteBuffers(1, ref _vboID);
+                GL.DeleteBuffer(_vboID);
                 _vboID = 0;
             }
 

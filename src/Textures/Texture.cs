@@ -17,6 +17,8 @@
  * along with OpenTKTK. If not, see <http://www.gnu.org/licenses/>.
  */
 
+using System;
+
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
@@ -25,7 +27,7 @@ namespace OpenTKTK.Textures
     /// <summary>
     /// Class that creates and manages an OpenGL texture.
     /// </summary>
-    public abstract class Texture
+    public abstract class Texture : IDisposable
     {
         #region Private Static Fields
         private static Texture _sCurrentLoadedTexture;
@@ -78,6 +80,8 @@ namespace OpenTKTK.Textures
         /// </summary>
         public int Depth { get; private set; }
 
+        public bool Dirty { get { return !_loaded; } }
+
         /// <summary>
         /// Constructor to create a new Texture instance.
         /// </summary>
@@ -129,6 +133,20 @@ namespace OpenTKTK.Textures
                 Load();
                 _loaded = true;
             }
+        }
+
+        /// <summary>
+        /// Dispose of unmanaged resources.
+        /// </summary>
+        public virtual void Dispose()
+        {
+            // If the texture has been created, delete it
+            if (_id != 0) {
+                GL.DeleteTexture(_id);
+                _id = 0;
+            }
+
+            _loaded = false;
         }
     }
 }
