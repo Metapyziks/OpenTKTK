@@ -44,10 +44,10 @@ namespace OpenTKTK.Scene
             }
         }
 
-        public Text(Font font) : base(0, 0, Color.White)
+        public Text(Font font, float scale = 1f) : base(0, 0, Color.White)
         {
             Value = String.Empty;
-            Scale = new Vector2(1, 1);
+            Scale = new Vector2(scale, scale);
             Font = font;
             Invalidate();
         }
