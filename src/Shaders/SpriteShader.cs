@@ -60,8 +60,8 @@ namespace OpenTKTK.Shaders
                 }
             ";
 
-            VertexSource = vert.Generate(GL3);
-            FragmentSource = frag.Generate(GL3);
+            VertexSource = vert.Generate();
+            FragmentSource = frag.Generate();
 
             BeginMode = BeginMode.Quads;
         }
@@ -77,7 +77,7 @@ namespace OpenTKTK.Shaders
         {
             base.OnCreate();
 
-            if (NVidiaCard) {
+            if (Tools.NVidiaCard) {
                 AddAttribute("in_texture", 2, 0, 2);
                 AddAttribute("in_colour", 4, 0, 4);
                 AddAttribute("in_position", 2, 0, 0);

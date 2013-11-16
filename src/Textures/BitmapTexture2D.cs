@@ -124,6 +124,10 @@ namespace OpenTKTK.Textures
         /// </summary>
         protected override void Load()
         {
+            if (!Tools.GL3) {
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.GenerateMipmap, 1);
+            }
+
             // Transfer from the bitmap buffer to video memory
             BitmapData data = Bitmap.LockBits(new Rectangle(0, 0, Bitmap.Width, Bitmap.Height), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, Bitmap.Width, Bitmap.Height, 0, OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, data.Scan0);
@@ -137,7 +141,9 @@ namespace OpenTKTK.Textures
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int) TextureWrapMode.Repeat);
 
             // Generate mipmap levels from the new texture
-            GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+            if (Tools.GL3) {
+                GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+            }
 
             Tools.ErrorCheck("loadtexture");
         }

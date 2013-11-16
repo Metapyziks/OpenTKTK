@@ -164,45 +164,8 @@ namespace OpenTKTK.Shaders
             }
         }
 
-        private static bool _sVersionChecked;
-        private static bool _sGL3;
-        private static bool _sNVidiaCard = false;
-
         private static ShaderProgram _sCurProgram;
-
-        public static bool GL3
-        {
-            get
-            {
-                if (!_sVersionChecked)
-                    CheckGLVersion();
-
-                return _sGL3;
-            }
-        }
-
-        public static bool NVidiaCard
-        {
-            get
-            {
-                if (!_sVersionChecked)
-                    CheckGLVersion();
-
-                return _sNVidiaCard;
-            }
-        }
-
-        private static void CheckGLVersion()
-        {
-            String _sr = GL.GetString(StringName.Version);
-            _sGL3 = _sr.StartsWith("3.") || _sr.StartsWith("4.");
-
-            _sr = GL.GetString(StringName.Vendor);
-            _sNVidiaCard = _sr.ToUpper().StartsWith("NVIDIA");
-
-            _sVersionChecked = true;
-        }
-
+        
         public int VertexDataStride { get; private set; }
         public int VertexDataSize { get; private set; }
 
@@ -271,7 +234,7 @@ namespace OpenTKTK.Shaders
 #endif
             Use();
 
-            if (GL3) {
+            if (Tools.GL3) {
                 GL.BindFragDataLocation(Program, 0, "out_colour");
             }
 

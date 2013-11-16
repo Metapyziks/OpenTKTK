@@ -191,12 +191,12 @@ namespace OpenTKTK.Utils
         /// </summary>
         /// <param name="gl3">If true, OpenGL 3.0 specific features will be used</param>
         /// <returns>GLSL source code ready to be compiled</returns>
-        public String Generate(bool gl3)
+        public String Generate()
         {
             StringBuilder sb = new StringBuilder();
 
             // Specify GLSL version
-            sb.AppendFormat("#version {0}", gl3 ? "130" : "120");
+            sb.AppendFormat("#version {0}", Tools.GL3 ? "130" : "120");
             sb.AppendLine();
 
             // List each required extension, if any exist
@@ -209,7 +209,7 @@ namespace OpenTKTK.Utils
             }
 
             // Specify float precision if using OpenGL 3.0
-            if (gl3) {
+            if (Tools.GL3) {
                 sb.AppendLine("precision highp float;");
                 sb.AppendLine();
             }
@@ -227,7 +227,7 @@ namespace OpenTKTK.Utils
 
             // List each attribute and its type
             foreach (ShaderVariable var in _attribs) {
-                sb.AppendFormat("{0} {1} {2};", gl3 ? "in" : "attribute", var.TypeString, var.Identifier);
+                sb.AppendFormat("{0} {1} {2};", Tools.GL3 ? "in" : "attribute", var.TypeString, var.Identifier);
                 sb.AppendLine();
             }
 
@@ -238,7 +238,7 @@ namespace OpenTKTK.Utils
 
             // List each varying and its type
             foreach (ShaderVariable var in _varyings) {
-                sb.AppendFormat("{0} {1} {2};", gl3 ? Type == ShaderType.VertexShader
+                sb.AppendFormat("{0} {1} {2};", Tools.GL3 ? Type == ShaderType.VertexShader
                     ? "out" : "in" : "varying", var.TypeString, var.Identifier);
                 sb.AppendLine();
             }
@@ -250,7 +250,7 @@ namespace OpenTKTK.Utils
 
             // If this is a fragment shader using OpenGL 3.0+, include the
             // custom fragment output colour identifier
-            if (gl3 && Type == ShaderType.FragmentShader) {
+            if (Tools.GL3 && Type == ShaderType.FragmentShader) {
                 sb.AppendFormat("out vec4 {0};", FragOutIdentifier);
                 sb.AppendLine();
                 sb.AppendLine();
@@ -267,7 +267,7 @@ namespace OpenTKTK.Utils
             String logic = indent.Length == 0 ? Logic.Trim() : Logic.Trim().Replace(indent, "");
 
             if (Type == ShaderType.FragmentShader) {
-                if (gl3)
+                if (Tools.GL3)
                     logic = logic.Replace("texture2DArray(", "texture(")
                         .Replace("textureCube(", "texture(")
                         .Replace("texture2D(", "texture(");

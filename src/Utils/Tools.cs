@@ -26,6 +26,43 @@ namespace OpenTKTK.Utils
 {
     public static class Tools
     {
+        private static bool _sVersionChecked;
+        private static bool _sGL3;
+        private static bool _sNVidiaCard = false;
+
+        public static bool GL3
+        {
+            get
+            {
+                if (!_sVersionChecked)
+                    CheckGLVersion();
+
+                return _sGL3;
+            }
+        }
+
+        public static bool NVidiaCard
+        {
+            get
+            {
+                if (!_sVersionChecked)
+                    CheckGLVersion();
+
+                return _sNVidiaCard;
+            }
+        }
+
+        private static void CheckGLVersion()
+        {
+            String _sr = GL.GetString(StringName.Version);
+            _sGL3 = _sr.StartsWith("3.") || _sr.StartsWith("4.");
+
+            _sr = GL.GetString(StringName.Vendor);
+            _sNVidiaCard = _sr.ToUpper().StartsWith("NVIDIA");
+
+            _sVersionChecked = true;
+        }
+
         /// <summary>
         /// Restrain a value to be within a given range.
         /// </summary>
