@@ -217,21 +217,19 @@ namespace OpenTKTK.Shaders
 
             GL.CompileShader(vert);
             GL.CompileShader(frag);
-#if DEBUG
+
             String log;
-            Debug.WriteLine(GetType().FullName);
-            if ((log = GL.GetShaderInfoLog(vert).Trim()).Length > 0) Debug.WriteLine(log);
-            if ((log = GL.GetShaderInfoLog(frag).Trim()).Length > 0) Debug.WriteLine(log);
-#endif
+            Trace.WriteLine(GetType().FullName);
+            if ((log = GL.GetShaderInfoLog(vert).Trim()).Length > 0) Trace.WriteLine(log);
+            if ((log = GL.GetShaderInfoLog(frag).Trim()).Length > 0) Trace.WriteLine(log);
 
             GL.AttachShader(Program, vert);
             GL.AttachShader(Program, frag);
 
             GL.LinkProgram(Program);
-#if DEBUG
-            if ((log = GL.GetProgramInfoLog(Program).Trim()).Length > 0) Debug.WriteLine(log);
-            Debug.WriteLine("----------------");
-#endif
+
+            if ((log = GL.GetProgramInfoLog(Program).Trim()).Length > 0) Trace.WriteLine(log);
+            Trace.WriteLine("----------------");
             Use();
 
             if (Tools.GL3) {

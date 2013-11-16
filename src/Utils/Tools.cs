@@ -57,12 +57,12 @@ namespace OpenTKTK.Utils
             String str = GL.GetString(StringName.Version);
             _sGL3 = str.StartsWith("3.") || str.StartsWith("4.");
 
-            Debug.WriteLine("GL Version: " + str);
+            Trace.WriteLine("GL Version: " + str);
 
             str = GL.GetString(StringName.Vendor);
             _sNVidiaCard = str.ToUpper().StartsWith("NVIDIA");
 
-            Debug.WriteLine("Vendor: " + str);
+            Trace.WriteLine("Vendor: " + str);
 
             _sVersionChecked = true;
         }
@@ -106,7 +106,7 @@ namespace OpenTKTK.Utils
                 // Print the current call stack to the debug output,
                 // then throw an exception
                 var trace = new StackTrace(1);
-                Debug.WriteLine(ec.ToString() + " at " + loc + Environment.NewLine + trace.ToString());
+                Trace.WriteLine(ec.ToString() + " at " + loc + Environment.NewLine + trace.ToString());
                 throw new Exception(ec.ToString() + " at " + loc);
             }
 #endif
