@@ -54,11 +54,15 @@ namespace OpenTKTK.Utils
 
         private static void CheckGLVersion()
         {
-            String _sr = GL.GetString(StringName.Version);
-            _sGL3 = _sr.StartsWith("3.") || _sr.StartsWith("4.");
+            String str = GL.GetString(StringName.Version);
+            _sGL3 = str.StartsWith("3.") || str.StartsWith("4.");
 
-            _sr = GL.GetString(StringName.Vendor);
-            _sNVidiaCard = _sr.ToUpper().StartsWith("NVIDIA");
+            Debug.WriteLine("GL Version: " + str);
+
+            str = GL.GetString(StringName.Vendor);
+            _sNVidiaCard = str.ToUpper().StartsWith("NVIDIA");
+
+            Debug.WriteLine("Vendor: " + str);
 
             _sVersionChecked = true;
         }
