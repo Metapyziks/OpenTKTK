@@ -47,7 +47,7 @@ namespace OpenTKTK.Textures
             _actualSize = MathHelper.NextPowerOfTwo(Math.Max(width, height));
 
             // Create local buffer for data
-            _data = new float[Width, Height];
+            _data = new float[_actualSize, _actualSize];
 
             // If a clear value was specified, set each pixel to that value
             if (clear != 0f) {
