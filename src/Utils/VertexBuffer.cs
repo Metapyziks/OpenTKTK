@@ -19,9 +19,8 @@
 
 using System;
 using System.Runtime.InteropServices;
-
+using OpenTK;
 using OpenTK.Graphics.OpenGL;
-
 using OpenTKTK.Shaders;
 
 namespace OpenTKTK.Utils
@@ -82,13 +81,26 @@ namespace OpenTKTK.Utils
         /// <param name="vertices">Array of vertex data</param>
         public void SetData<T>(T[] vertices) where T : struct
         {
+            var t = typeof(T);
+
             // Calculate size metrics of the data
-            _unitSize = Marshal.SizeOf(typeof(T));
-            _length = vertices.Length / Stride;
+            var tSize = Marshal.SizeOf(t);
+
+            if (t == typeof(Vector2) || t == typeof(Vector2d) || t == typeof(Vector2h)) {
+                _unitSize = tSize / 2;
+            } else if (t == typeof(Vector3) || t == typeof(Vector3d) || t == typeof(Vector3h)) {
+                _unitSize = tSize / 3;
+            } else if (t == typeof(Vector4) || t == typeof(Vector4d) || t == typeof(Vector4h)) {
+                _unitSize = tSize / 4;
+            } else {
+                _unitSize = tSize;
+            }
+
+            _length = (vertices.Length * tSize) / (Stride * _unitSize);
 
             // Bind the VBO, populate it, then unbind
             GL.BindBuffer(BufferTarget.ArrayBuffer, VboID);
-            GL.BufferData(BufferTarget.ArrayBuffer, new IntPtr(vertices.Length * _unitSize), vertices, _usageHint);
+            GL.BufferData(BufferTarget.ArrayBuffer, new IntPtr(vertices.Length * tSize), vertices, _usageHint);
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
 
             // Check that nothing went wrong
