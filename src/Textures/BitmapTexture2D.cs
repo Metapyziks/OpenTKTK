@@ -68,6 +68,10 @@ namespace OpenTKTK.Textures
         /// </summary>
         public Bitmap Bitmap { get; private set; }
 
+        public TextureMinFilter MinFilter { get; set; }
+
+        public TextureMagFilter MagFilter { get; set; }
+
         /// <summary>
         /// Constructor to create a new BitmapTexture2D instance from a bitmap.
         /// </summary>
@@ -75,6 +79,9 @@ namespace OpenTKTK.Textures
         public BitmapTexture2D(Bitmap bitmap)
             : base(TextureTarget.Texture2D, bitmap.Width, bitmap.Height)
         {
+            MinFilter = TextureMinFilter.LinearMipmapNearest;
+            MagFilter = TextureMagFilter.Nearest;
+
             // To be safe, always use a power of two width and height
             _actualSize = MathHelper.NextPowerOfTwo(Math.Max(bitmap.Width, bitmap.Height));
 
@@ -135,8 +142,8 @@ namespace OpenTKTK.Textures
 
             // This probably doesn't belong here - set the texture
             // filter and edge wrap modes
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int) TextureMinFilter.LinearMipmapNearest);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int) TextureMagFilter.Nearest);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int) MinFilter);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int) MagFilter);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapR, (int) TextureWrapMode.Repeat);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int) TextureWrapMode.Repeat);
 
