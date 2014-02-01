@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -75,8 +76,15 @@ namespace OpenTKTK.Scene
             }
 
             using (var ctx = Graphics.FromImage(Texture.Bitmap)) {
+                ctx.SmoothingMode = SmoothingMode.HighQuality;
                 ctx.Clear(Color.Transparent);
-                ctx.DrawString(Value, Font, _brush, 0, 0);
+
+                var path = new GraphicsPath();
+
+                path.AddString(Value, Font.FontFamily, (int) Font.Style,
+                    ctx.DpiY * Font.Size / 72f, PointF.Empty, StringFormat.GenericDefault);
+
+                ctx.FillPath(_brush, path);
             }
 
             Texture.Invalidate();
