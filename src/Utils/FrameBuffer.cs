@@ -18,9 +18,8 @@
  */
 
 using System;
-
+using OpenTK;
 using OpenTK.Graphics.OpenGL;
-
 using OpenTKTK.Textures;
 
 namespace OpenTKTK.Utils
@@ -48,6 +47,8 @@ namespace OpenTKTK.Utils
             }
         }
 
+        private int _depthBufferID;
+
         /// <summary>
         /// Gets the texture the FBO will draw to.
         /// </summary>
@@ -57,19 +58,42 @@ namespace OpenTKTK.Utils
         /// Constructor to create a new FrameBuffer instance.
         /// </summary>
         /// <param name="tex">Texture the frame buffer will write to</param>
-        public FrameBuffer(Texture tex)
+        public FrameBuffer(Texture tex, int depthBits = 0)
         {
             Texture = tex;
 
             // Prepare the target texture for use
             Texture.Bind();
 
+            if (depthBits > 0) {
+                _depthBufferID = GL.GenRenderbuffer();
+
+                RenderbufferStorage rbStorage;
+                switch (depthBits) {
+                    case 16:
+                        rbStorage = RenderbufferStorage.DepthComponent16; break;
+                    case 24:
+                        rbStorage = RenderbufferStorage.DepthComponent24; break;
+                    case 32:
+                        rbStorage = RenderbufferStorage.DepthComponent32; break;
+                    default:
+                        throw new ArgumentException("Invalid depth buffer bit count.");
+                }
+
+                int size = MathHelper.NextPowerOfTwo(Math.Max(tex.Width, tex.Height));
+
+                GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, _depthBufferID);
+                GL.RenderbufferStorage(RenderbufferTarget.Renderbuffer, rbStorage, size, size);
+                GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, 0);
+            }
+
             // Assign the texture to the frame buffer
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, FboID);
             GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, tex.TextureTarget, tex.TextureID, 0);
+            GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, RenderbufferTarget.Renderbuffer, _depthBufferID);
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
 
-            // Tools.ErrorCheck("fbo_init");
+            Tools.ErrorCheck("fbo_init");
         }
 
         /// <summary>
