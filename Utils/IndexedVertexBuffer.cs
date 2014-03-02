@@ -6,7 +6,7 @@ using OpenTKTK.Shaders;
 
 namespace OpenTKTK.Utils
 {
-    class IndexedVertexBuffer : VertexBuffer
+    public class IndexedVertexBuffer : VertexBuffer
     {
         private int _indicesVboID;
         private int _indicesLength;
