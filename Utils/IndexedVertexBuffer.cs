@@ -33,6 +33,12 @@ namespace OpenTKTK.Utils
             }
         }
 
+        public IndexedVertexBuffer(int stride, BufferUsageHint usageHint = BufferUsageHint.StaticDraw)
+            : base(stride, usageHint)
+        {
+            _indicesSet = false;
+        }
+
         public void SetIndices<T>(T[] indices) where T : struct
         {
             var t = typeof(T);
