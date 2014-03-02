@@ -28,18 +28,28 @@ namespace OpenTKTK.Utils
     /// <summary>
     /// Class that creates and manages an OpenGL vertex buffer object (VBO). 
     /// </summary>
-    public sealed class VertexBuffer : IDisposable
+    public class VertexBuffer : IDisposable
     {
         #region Private Fields
         private BufferUsageHint _usageHint;
 
         private int _unitSize;
         private int _vboID;
-        private int _length;
+        private int _dataLength;
 
         private bool _dataSet;
         private ShaderProgram _curShader;
         #endregion
+
+        protected BufferUsageHint UsageHint
+        {
+            get { return _usageHint; }
+        }
+
+        protected ShaderProgram CurrentShader
+        {
+            get { return _curShader; }
+        }
 
         /// <summary>
         /// Identification number assigned by OpenGL when the VBO is created.
@@ -54,6 +64,8 @@ namespace OpenTKTK.Utils
                 return _vboID;
             }
         }
+
+        public virtual bool DataSet { get { return _dataSet; } }
 
         /// <summary>
         /// Number of floats per vertex in the VBO.
@@ -96,7 +108,7 @@ namespace OpenTKTK.Utils
                 _unitSize = tSize;
             }
 
-            _length = (vertices.Length * tSize) / (Stride * _unitSize);
+            _dataLength = (vertices.Length * tSize) / (Stride * _unitSize);
 
             // Bind the VBO, populate it, then unbind
             GL.BindBuffer(BufferTarget.ArrayBuffer, VboID);
@@ -114,15 +126,15 @@ namespace OpenTKTK.Utils
         /// Prepare to draw from the VBO using a given shader.
         /// </summary>
         /// <param name="shader">Shader to use when drawing from the VBO</param>
-        public void Begin(ShaderProgram shader)
+        public virtual void Begin(ShaderProgram shader)
         {
             _curShader = shader;
 
-            // Bind the buffer ready for drawing
-            GL.BindBuffer(BufferTarget.ArrayBuffer, VboID);
-
             // Prepare the shader for drawing, and set up attribute pointers
             shader.Begin(false);
+
+            // Bind the buffer ready for drawing
+            GL.BindBuffer(BufferTarget.ArrayBuffer, VboID);
         }
 
         /// <summary>
@@ -130,13 +142,13 @@ namespace OpenTKTK.Utils
         /// </summary>
         /// <param name="first">Index of the first vertex to draw</param>
         /// <param name="count">Number of vertices to draw</param>
-        public void Render(int first = 0, int count = -1)
+        public virtual void Render(int first = 0, int count = -1)
         {
             // Don't try and draw if the VBO hasn't been populated
-            if (_dataSet) {
+            if (DataSet) {
                 // If no count is specified, draw all vertices
                 if (count == -1) {
-                    count = _length - first;
+                    count = _dataLength - first;
                 }
 
                 // Draw the specified range of vertices
@@ -147,7 +159,7 @@ namespace OpenTKTK.Utils
         /// <summary>
         /// Finish drawing from the VBO.
         /// </summary>
-        public void End()
+        public virtual void End()
         {
             // Unbind the VBO
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
@@ -159,7 +171,7 @@ namespace OpenTKTK.Utils
         /// <summary>
         /// Dispose of unmanaged resources.
         /// </summary>
-        public void Dispose()
+        public virtual void Dispose()
         {
             // If the VBO has been created, delete it
             if (_vboID != 0) {
