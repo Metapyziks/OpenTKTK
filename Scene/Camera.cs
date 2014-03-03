@@ -119,7 +119,7 @@ namespace OpenTKTK.Scene
         /// <summary>
         /// Position of the camera in the world.
         /// </summary>
-        public Vector3 Position
+        public virtual Vector3 Position
         {
             get { return _position; }
             set
@@ -132,7 +132,7 @@ namespace OpenTKTK.Scene
         /// <summary>
         /// X component of the camera's position in the world.
         /// </summary>
-        public float X
+        public virtual float X
         {
             get { return _position.X; }
             set
@@ -145,7 +145,7 @@ namespace OpenTKTK.Scene
         /// <summary>
         /// Y component of the camera's position in the world.
         /// </summary>
-        public float Y
+        public virtual float Y
         {
             get { return _position.Y; }
             set
@@ -158,7 +158,7 @@ namespace OpenTKTK.Scene
         /// <summary>
         /// Z component of the camera's position in the world.
         /// </summary>
-        public float Z
+        public virtual float Z
         {
             get { return _position.Z; }
             set
@@ -242,8 +242,8 @@ namespace OpenTKTK.Scene
             Width = width;
             Height = height;
 
-            Position = new Vector3();
-            Rotation = new Vector2();
+            _position = new Vector3();
+            _rotation = new Vector2();
 
             InvalidatePerspectiveMatrix();
             InvalidateViewMatrix();
