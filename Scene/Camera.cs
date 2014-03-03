@@ -29,6 +29,10 @@ namespace OpenTKTK.Scene
     /// </summary>
     public class Camera
     {
+        private float _fov;
+        private float _zNear;
+        private float _zFar;
+
         /// <summary>
         /// Enumeration of positional components.
         /// </summary>
@@ -71,6 +75,36 @@ namespace OpenTKTK.Scene
         /// Current height in pixels of the viewport being drawn to.
         /// </summary>
         public int Height { get; private set; }
+
+        public float FieldOfView
+        {
+            get { return _fov; }
+            set
+            {
+                _fov = value;
+                _perspectiveChanged = true;
+            }
+        }
+
+        public float ZNear
+        {
+            get { return _zNear; }
+            set
+            {
+                _zNear = value;
+                _perspectiveChanged = true;
+            }
+        }
+
+        public float ZFar
+        {
+            get { return _zFar; }
+            set
+            {
+                _zFar = value;
+                _perspectiveChanged = true;
+            }
+        }
 
         /// <summary>
         /// Perspective matrix that encodes the transformation from
@@ -237,10 +271,17 @@ namespace OpenTKTK.Scene
         /// </summary>
         /// <param name="width">Width of the viewport in pixels</param>
         /// <param name="height">Height of the viewport in pixels</param>
-        public Camera(int width, int height)
+        public Camera(int width, int height,
+            float fov = MathHelper.PiOver3,
+            float zNear = 1f / 64f,
+            float zFar = 256f)
         {
             Width = width;
             Height = height;
+
+            _zNear = zNear;
+            _zFar = zFar;
+            _fov = fov;
 
             _position = new Vector3();
             _rotation = new Vector2();
@@ -290,8 +331,8 @@ namespace OpenTKTK.Scene
         {
             // Set up a perspective matrix with a 60 degree FOV, the aspect ratio
             // of the current viewport dimensions, some arbitrary depth clip planes
-            matrix = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver3,
-                (float) Width / Height, 1f / 64f, 256f);
+            matrix = Matrix4.CreatePerspectiveFieldOfView(
+                FieldOfView, (float) Width / Height, ZNear, ZFar);
         }
 
         /// <summary>
