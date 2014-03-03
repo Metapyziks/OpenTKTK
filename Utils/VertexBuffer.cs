@@ -128,13 +128,13 @@ namespace OpenTKTK.Utils
         /// <param name="shader">Shader to use when drawing from the VBO</param>
         public virtual void Begin(ShaderProgram shader)
         {
+            // Bind the buffer ready for drawing
+            GL.BindBuffer(BufferTarget.ArrayBuffer, VboID);
+            
             _curShader = shader;
 
             // Prepare the shader for drawing, and set up attribute pointers
             shader.Begin(false);
-
-            // Bind the buffer ready for drawing
-            GL.BindBuffer(BufferTarget.ArrayBuffer, VboID);
         }
 
         /// <summary>

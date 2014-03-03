@@ -53,7 +53,7 @@ namespace OpenTKTK.Utils
                 case 2:
                     _indicesType = DrawElementsType.UnsignedShort;
                     break;
-                case 3:
+                case 4:
                     _indicesType = DrawElementsType.UnsignedInt;
                     break;
                 default:
@@ -76,9 +76,9 @@ namespace OpenTKTK.Utils
 
         public override void Begin(ShaderProgram shader)
         {
-            base.Begin(shader);
-
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, IndicesVboID);
+
+            base.Begin(shader);
         }
 
         public override void Render(int first = 0, int count = -1)

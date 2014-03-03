@@ -31,7 +31,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <HintPath>..\packages\OpenTK.1.1.1508.5724\lib\NET40\OpenTK.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -44,29 +45,31 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\Scene\Camera.cs" />
-    <Compile Include="src\Scene\Model.cs" />
-    <Compile Include="src\Scene\Sprite.cs">
+    <Compile Include="Scene\Camera.cs" />
+    <Compile Include="Scene\Model.cs" />
+    <Compile Include="Scene\Sprite.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\Scene\Text.cs" />
-    <Compile Include="src\Shaders\ShaderProgram.cs" />
-    <Compile Include="src\Shaders\ShaderProgram2D.cs" />
-    <Compile Include="src\Shaders\ShaderProgram3D.cs" />
-    <Compile Include="src\Shaders\SpriteShader.cs">
+    <Compile Include="Scene\Text.cs" />
+    <Compile Include="Shaders\ShaderProgram.cs" />
+    <Compile Include="Shaders\ShaderProgram2D.cs" />
+    <Compile Include="Shaders\ShaderProgram3D.cs" />
+    <Compile Include="Shaders\SpriteShader.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\Textures\AlphaTexture2D.cs" />
-    <Compile Include="src\Textures\BitmapTexture2D.cs" />
-    <Compile Include="src\Textures\CubeMapTexture.cs" />
-    <Compile Include="src\Textures\Texture.cs" />
-    <Compile Include="src\Utils\FrameBuffer.cs" />
-    <Compile Include="src\Utils\ShaderBuilder.cs" />
-    <Compile Include="src\Utils\Tools.cs" />
-    <Compile Include="src\Utils\VertexBuffer.cs" />
+    <Compile Include="Textures\AlphaTexture2D.cs" />
+    <Compile Include="Textures\BitmapTexture2D.cs" />
+    <Compile Include="Textures\CubeMapTexture.cs" />
+    <Compile Include="Textures\Texture.cs" />
+    <Compile Include="Utils\FrameBuffer.cs" />
+    <Compile Include="Utils\IndexedVertexBuffer.cs" />
+    <Compile Include="Utils\ShaderBuilder.cs" />
+    <Compile Include="Utils\Tools.cs" />
+    <Compile Include="Utils\VertexBuffer.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
