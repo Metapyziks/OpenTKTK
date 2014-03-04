@@ -284,6 +284,7 @@ namespace OpenTKTK.Utils
                     + "    gl_Position = vec4( _pos_, 0.0, 1.0 );");
             }
 
+            sb.AppendLine("#line 0");
             sb.Append(logic);
 
             // Return the completed shader source
