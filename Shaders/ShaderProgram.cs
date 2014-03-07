@@ -31,7 +31,7 @@ using OpenTKTK.Utils;
 
 namespace OpenTKTK.Shaders
 {
-    public class ShaderProgram
+    public class ShaderProgram : IDisposable
     {
         public class AttributeInfo
         {
@@ -446,6 +446,13 @@ namespace OpenTKTK.Shaders
                             break;
                     }
                 }
+            }
+        }
+
+        public virtual void Dispose()
+        {
+            if (Program != 0) {
+                GL.DeleteProgram(Program);
             }
         }
     }

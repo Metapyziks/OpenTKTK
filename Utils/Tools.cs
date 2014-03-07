@@ -67,6 +67,21 @@ namespace OpenTKTK.Utils
             _sVersionChecked = true;
         }
 
+        public static float NextSingle(this Random rand)
+        {
+            return (float) rand.NextDouble();
+        }
+
+        public static float NextSingle(this Random rand, float max)
+        {
+            return (float) (rand.NextDouble() * max);
+        }
+
+        public static float NextSingle(this Random rand, float min, float max)
+        {
+            return min + (float) (rand.NextDouble() * (max - min));
+        }
+
         /// <summary>
         /// Restrain a value to be within a given range.
         /// </summary>
