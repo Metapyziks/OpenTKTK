@@ -72,6 +72,8 @@ namespace OpenTKTK.Textures
 
         public TextureWrapMode TextureWrapS { get; set; }
 
+        public TextureWrapMode TextureWrapT { get; set; }
+
         /// <summary>
         /// Constructor to create a new BitmapTexture2D instance from a bitmap.
         /// </summary>
@@ -84,6 +86,7 @@ namespace OpenTKTK.Textures
 
             TextureWrapR = TextureWrapMode.Repeat;
             TextureWrapS = TextureWrapMode.Repeat;
+            TextureWrapT = TextureWrapMode.Repeat;
             
             Bitmap = bitmap;
         }
@@ -131,6 +134,7 @@ namespace OpenTKTK.Textures
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int) MagFilter);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapR, (int) TextureWrapR);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int) TextureWrapS);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int) TextureWrapT);
 
             // Generate mipmap levels from the new texture
             if (Tools.GL3) {
