@@ -94,6 +94,16 @@ namespace OpenTKTK.Utils
         private List<ShaderVariable> _varyings;
         #endregion
 
+        public IEnumerable<KeyValuePair<String, ShaderVarType>> Uniforms
+        {
+            get { return _uniforms.Select(x => new KeyValuePair<String, ShaderVarType>(x.Identifier, x.Type)); }
+        }
+
+        public IEnumerable<KeyValuePair<String, ShaderVarType>> Attributes
+        {
+            get { return _attribs.Select(x => new KeyValuePair<String, ShaderVarType>(x.Identifier, x.Type)); }
+        }
+
         /// <summary>
         /// Shader type to generate the source for. Currently only vertex
         /// and fragment shaders are supported.
@@ -130,7 +140,7 @@ namespace OpenTKTK.Utils
             _attribs = new List<ShaderVariable>();
             _varyings = new List<ShaderVariable>();
 
-            if (type == ShaderType.VertexShader && twoDimensional) {
+            if (twoDimensional) {
                 AddUniform(ShaderVarType.Vec2, "screen_resolution");
             }
 

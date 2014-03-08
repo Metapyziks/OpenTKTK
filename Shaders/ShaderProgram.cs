@@ -136,6 +136,23 @@ namespace OpenTKTK.Shaders
 
         public class AttributeCollection : IEnumerable<AttributeInfo>
         {
+            private static int GetAttributeSize(ShaderVarType type)
+            {
+                switch (type) {
+                    case ShaderVarType.Float:
+                    case ShaderVarType.Int:
+                        return 1;
+                    case ShaderVarType.Vec2:
+                        return 2;
+                    case ShaderVarType.Vec3:
+                        return 3;
+                    case ShaderVarType.Vec4:
+                        return 4;
+                    default:
+                        throw new ArgumentException("Invalid attribute type (" + type + ").");
+                }
+            }
+
             private ShaderProgram _shader;
 
             internal AttributeCollection(ShaderProgram shader)
@@ -176,8 +193,8 @@ namespace OpenTKTK.Shaders
         public int Program { get; private set; }
 
         public BeginMode BeginMode { get; protected set; }
-        public String VertexSource { get; protected set; }
-        public String FragmentSource { get; protected set; }
+
+        public bool Flat { get; private set; }
 
         public bool Active
         {
@@ -189,9 +206,10 @@ namespace OpenTKTK.Shaders
 
         public AttributeCollection Attributes { get; private set; }
 
-        public ShaderProgram()
+        public ShaderProgram(bool flat)
         {
             BeginMode = BeginMode.Triangles;
+            Flat = flat;
 
             _attributes = new List<AttributeInfo>();
             _textures = new Dictionary<String, TextureInfo>();
@@ -203,17 +221,35 @@ namespace OpenTKTK.Shaders
             Attributes = new AttributeCollection(this);
 
             Started = false;
+
+            Create();
         }
 
-        public void Create()
+        protected virtual void ConstructVertexShader(ShaderBuilder vert)
+        {
+            return;
+        }
+
+        protected virtual void ConstructFragmentShader(ShaderBuilder frag)
+        {
+            return;
+        }
+
+        private void Create()
         {
             Program = GL.CreateProgram();
 
             int vert = GL.CreateShader(ShaderType.VertexShader);
             int frag = GL.CreateShader(ShaderType.FragmentShader);
 
-            GL.ShaderSource(vert, VertexSource);
-            GL.ShaderSource(frag, FragmentSource);
+            var vertBuilder = new ShaderBuilder(ShaderType.VertexShader, Flat);
+            ConstructVertexShader(vertBuilder);
+
+            var fragBuilder = new ShaderBuilder(ShaderType.FragmentShader, Flat, vertBuilder);
+            ConstructFragmentShader(fragBuilder);
+
+            GL.ShaderSource(vert, vertBuilder.Generate());
+            GL.ShaderSource(frag, fragBuilder.Generate());
 
             GL.CompileShader(vert);
             GL.CompileShader(frag);
@@ -234,6 +270,19 @@ namespace OpenTKTK.Shaders
 
             if (Tools.GL3) {
                 GL.BindFragDataLocation(Program, 0, "out_colour");
+            }
+
+            foreach (var uniform in vertBuilder.Uniforms.Union(fragBuilder.Uniforms)) {
+                switch (uniform.Value) {
+                    case ShaderVarType.Sampler2D:
+                    case ShaderVarType.Sampler2DArray:
+                    case ShaderVarType.SamplerCube:
+                        AddTexture(uniform.Key);
+                        break;
+                    default:
+                        AddUniform(uniform.Key);
+                        break;
+                }
             }
 
             OnCreate();

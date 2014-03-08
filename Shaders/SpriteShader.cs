@@ -27,14 +27,20 @@ namespace OpenTKTK.Shaders
 
         public SpriteShader()
         {
-            ShaderBuilder vert = new ShaderBuilder(ShaderType.VertexShader, true);
+            BeginMode = BeginMode.Quads;
+        }
+
+        protected override void ConstructVertexShader(ShaderBuilder vert)
+        {
+            base.ConstructVertexShader(vert);
+
             vert.AddAttribute(ShaderVarType.Vec2, "in_position");
             vert.AddAttribute(ShaderVarType.Vec2, "in_texture");
             vert.AddAttribute(ShaderVarType.Vec4, "in_colour");
             vert.AddVarying(ShaderVarType.Vec2, "var_texture");
             vert.AddVarying(ShaderVarType.Vec4, "var_colour");
             vert.Logic = @"
-                void main( void )
+                void main(void)
                 {
                     var_texture = in_texture;
                     var_colour = in_colour;
@@ -42,30 +48,26 @@ namespace OpenTKTK.Shaders
                     gl_Position = in_position;
                 }
             ";
+        }
 
-            ShaderBuilder frag = new ShaderBuilder(ShaderType.FragmentShader, true);
-            frag.AddUniform(ShaderVarType.Sampler2D, "texture0");
-            frag.AddVarying(ShaderVarType.Vec2, "var_texture");
-            frag.AddVarying(ShaderVarType.Vec4, "var_colour");
+        protected override void ConstructFragmentShader(ShaderBuilder frag)
+        {
+            base.ConstructFragmentShader(frag);
+
+            frag.AddUniform(ShaderVarType.Sampler2D, "sprite");
             frag.FragOutIdentifier = "out_frag_colour";
             frag.Logic = @"
-                void main( void )
+                void main(void)
                 {
-                    vec4 clr = texture2D( texture0, var_texture ) * var_colour;
+                    vec4 clr = texture2D(sprite, var_texture) * var_colour;
 
-                    if( clr.a != 0.0 )
+                    if (clr.a != 0.0) {
                         out_frag_colour = clr.rgba;
-                    else
+                    } else {
                         discard;
+                    }
                 }
             ";
-
-            VertexSource = vert.Generate();
-            FragmentSource = frag.Generate();
-
-            BeginMode = BeginMode.Quads;
-
-            Create();
         }
 
         public SpriteShader(int width, int height)
@@ -87,8 +89,6 @@ namespace OpenTKTK.Shaders
                 AddAttribute("in_texture", 2);
                 AddAttribute("in_colour", 4);
             }
-
-            AddTexture("texture0");
         }
 
         protected override void OnBegin()

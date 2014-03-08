@@ -20,6 +20,7 @@
 using OpenTK;
 
 using OpenTKTK.Scene;
+using OpenTKTK.Utils;
 
 namespace OpenTKTK.Shaders
 {
@@ -28,11 +29,25 @@ namespace OpenTKTK.Shaders
     {
         public T Camera { get; set; }
 
-        protected override void OnCreate()
-        {
-            base.OnCreate();
+        public ShaderProgram3D()
+            : base(false) { }
 
-            AddUniform("vp_matrix");
+        protected override void ConstructVertexShader(ShaderBuilder vert)
+        {
+            base.ConstructVertexShader(vert);
+
+            vert.AddUniform(ShaderVarType.Mat4, "view");
+            vert.AddUniform(ShaderVarType.Mat4, "proj");
+            vert.AddUniform(ShaderVarType.Vec3, "camera");
+        }
+
+        protected override void ConstructFragmentShader(ShaderBuilder frag)
+        {
+            base.ConstructVertexShader(frag);
+
+            frag.AddUniform(ShaderVarType.Mat4, "view");
+            frag.AddUniform(ShaderVarType.Mat4, "proj");
+            frag.AddUniform(ShaderVarType.Vec3, "camera");
         }
 
         protected override void OnBegin()
@@ -40,8 +55,11 @@ namespace OpenTKTK.Shaders
             base.OnBegin();
 
             if (Camera != null) {
-                Matrix4 viewMat = Camera.CombinedMatrix;
-                SetUniform("vp_matrix", ref viewMat);
+                var view = Camera.ViewMatrix;
+                var proj = Camera.PerspectiveMatrix;
+                SetUniform("view", ref view);
+                SetUniform("proj", ref proj);
+                SetUniform("camera", Camera.Position);
             }
         }
     }

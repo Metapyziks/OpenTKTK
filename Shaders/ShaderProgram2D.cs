@@ -17,28 +17,26 @@
  * along with OpenTKTK. If not, see <http://www.gnu.org/licenses/>.
  */
 
+using OpenTKTK.Utils;
 namespace OpenTKTK.Shaders
 {
     public class ShaderProgram2D : ShaderProgram
     {
         public ShaderProgram2D()
-            : base()
+            : base(true)
         {
 
         }
 
         public ShaderProgram2D(int width, int height)
-            : base()
+            : base(true)
         {
-            Create();
             SetScreenSize(width, height);
         }
 
         protected override void OnCreate()
         {
             base.OnCreate();
-
-            AddUniform("screen_resolution");
         }
 
         public void SetScreenSize(int width, int height)
