@@ -64,12 +64,13 @@ namespace OpenTKTK.Shaders
             FragmentSource = frag.Generate();
 
             BeginMode = BeginMode.Quads;
+
+            Create();
         }
 
         public SpriteShader(int width, int height)
             : this()
         {
-            Create();
             SetScreenSize(width, height);
         }
 

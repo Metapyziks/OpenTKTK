@@ -59,10 +59,6 @@ namespace OpenTKTK.Textures
             return new BitmapTexture2D(new Bitmap(filePath));
         }
 
-        #region Private Fields
-        private readonly int _actualSize;
-        #endregion
-
         /// <summary>
         /// Local bitmap representation of the texture.
         /// </summary>
@@ -72,6 +68,10 @@ namespace OpenTKTK.Textures
 
         public TextureMagFilter MagFilter { get; set; }
 
+        public TextureWrapMode TextureWrapR { get; set; }
+
+        public TextureWrapMode TextureWrapS { get; set; }
+
         /// <summary>
         /// Constructor to create a new BitmapTexture2D instance from a bitmap.
         /// </summary>
@@ -79,27 +79,13 @@ namespace OpenTKTK.Textures
         public BitmapTexture2D(Bitmap bitmap)
             : base(TextureTarget.Texture2D, bitmap.Width, bitmap.Height)
         {
-            MinFilter = TextureMinFilter.LinearMipmapNearest;
-            MagFilter = TextureMagFilter.Nearest;
+            MinFilter = TextureMinFilter.LinearMipmapLinear;
+            MagFilter = TextureMagFilter.Linear;
 
-            // To be safe, always use a power of two width and height
-            _actualSize = MathHelper.NextPowerOfTwo(Math.Max(bitmap.Width, bitmap.Height));
-
-            // If the image is already of power of two size, don't bother resizing
-            if (_actualSize == bitmap.Width && _actualSize == bitmap.Height) {
-                Bitmap = bitmap;
-            } else {
-                // Otherwise, create a new bitmap of the correct size
-                Bitmap = new Bitmap(_actualSize, _actualSize);
-
-                // Set each pixel of the new bitmap with the corresponding
-                // pixel of the original
-                for (int x = 0; x < Width; ++x) {
-                    for (int y = 0; y < Height; ++y) {
-                        Bitmap.SetPixel(x, y, bitmap.GetPixel(x, y));
-                    }
-                }
-            }
+            TextureWrapR = TextureWrapMode.Repeat;
+            TextureWrapS = TextureWrapMode.Repeat;
+            
+            Bitmap = bitmap;
         }
 
         /// <summary>
@@ -112,8 +98,7 @@ namespace OpenTKTK.Textures
             : this(new Bitmap(width, height)) { }
 
         /// <summary>
-        /// Finds the actual texel coordinates for images that are not a power-of-two
-        /// size, and have therefore been expanded.
+        /// Finds the texel coordinates for a position in the texture.
         /// </summary>
         /// <param name="x">Horizontal position of the texel</param>
         /// <param name="y">Vertical position of the texel</param>
@@ -121,8 +106,8 @@ namespace OpenTKTK.Textures
         public Vector2 GetCoords(float x, float y)
         {
             return new Vector2 {
-                X = x / _actualSize,
-                Y = y / _actualSize
+                X = x / Bitmap.Width,
+                Y = y / Bitmap.Height
             };
         }
 
@@ -144,8 +129,8 @@ namespace OpenTKTK.Textures
             // filter and edge wrap modes
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int) MinFilter);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int) MagFilter);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapR, (int) TextureWrapMode.Repeat);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int) TextureWrapMode.Repeat);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapR, (int) TextureWrapR);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int) TextureWrapS);
 
             // Generate mipmap levels from the new texture
             if (Tools.GL3) {
