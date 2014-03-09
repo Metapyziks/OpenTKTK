@@ -80,10 +80,8 @@ namespace OpenTKTK.Utils
                         throw new ArgumentException("Invalid depth buffer bit count.");
                 }
 
-                int size = MathHelper.NextPowerOfTwo(Math.Max(tex.Width, tex.Height));
-
                 GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, _depthBufferID);
-                GL.RenderbufferStorage(RenderbufferTarget.Renderbuffer, rbStorage, size, size);
+                GL.RenderbufferStorage(RenderbufferTarget.Renderbuffer, rbStorage, tex.Width, tex.Height);
                 GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, 0);
             }
 
