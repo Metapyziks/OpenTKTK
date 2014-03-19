@@ -19,7 +19,7 @@ namespace OpenTKTK.Shaders
             set
             {
                 if (_texture != value || _texture.Dirty) {
-                    SetTexture("texture0", value);
+                    SetTexture("sprite", value);
                     _texture = value;
                 }
             }
@@ -55,14 +55,13 @@ namespace OpenTKTK.Shaders
             base.ConstructFragmentShader(frag);
 
             frag.AddUniform(ShaderVarType.Sampler2D, "sprite");
-            frag.FragOutIdentifier = "out_frag_colour";
             frag.Logic = @"
                 void main(void)
                 {
                     vec4 clr = texture2D(sprite, var_texture) * var_colour;
 
                     if (clr.a != 0.0) {
-                        out_frag_colour = clr.rgba;
+                        out_colour = clr.rgba;
                     } else {
                         discard;
                     }
