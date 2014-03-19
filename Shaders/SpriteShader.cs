@@ -27,7 +27,7 @@ namespace OpenTKTK.Shaders
 
         public SpriteShader()
         {
-            BeginMode = BeginMode.Quads;
+            PrimitiveType = PrimitiveType.Quads;
         }
 
         protected override void ConstructVertexShader(ShaderBuilder vert)

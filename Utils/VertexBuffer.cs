@@ -152,7 +152,7 @@ namespace OpenTKTK.Utils
                 }
 
                 // Draw the specified range of vertices
-                GL.DrawArrays(_curShader.BeginMode, first, count);
+                GL.DrawArrays(_curShader.PrimitiveType, first, count);
             }
         }
 

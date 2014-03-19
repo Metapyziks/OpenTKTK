@@ -91,7 +91,7 @@ namespace OpenTKTK.Utils
                 }
 
                 // Draw the specified range of vertices
-                GL.DrawElements(CurrentShader.BeginMode, count, _indicesType, first * _indicesSize);
+                GL.DrawElements(CurrentShader.PrimitiveType, count, _indicesType, first * _indicesSize);
             }
         }
 

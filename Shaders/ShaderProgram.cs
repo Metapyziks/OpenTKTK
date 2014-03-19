@@ -192,7 +192,7 @@ namespace OpenTKTK.Shaders
 
         public int Program { get; private set; }
 
-        public BeginMode BeginMode { get; protected set; }
+        public PrimitiveType PrimitiveType { get; protected set; }
 
         public bool Flat { get; private set; }
 
@@ -208,7 +208,7 @@ namespace OpenTKTK.Shaders
 
         public ShaderProgram(bool flat)
         {
-            BeginMode = BeginMode.Triangles;
+            PrimitiveType = PrimitiveType.Triangles;
             Flat = flat;
 
             _attributes = new List<AttributeInfo>();
@@ -351,7 +351,7 @@ namespace OpenTKTK.Shaders
             Tools.ErrorCheck("settexture");
 
             if (Started && Immediate)
-                GL.Begin(BeginMode);
+                GL.Begin(PrimitiveType);
         }
 
         protected int GetUniformLocation(String identifier)
@@ -423,7 +423,7 @@ namespace OpenTKTK.Shaders
             Tools.ErrorCheck("begin");
 
             if (immediateMode) {
-                GL.Begin(BeginMode);
+                GL.Begin(PrimitiveType);
             } else {
                 foreach (AttributeInfo info in _attributes) {
                     GL.VertexAttribPointer(info.Location, info.Size,
