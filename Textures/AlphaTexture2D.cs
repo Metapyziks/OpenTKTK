@@ -43,13 +43,13 @@ namespace OpenTKTK.Textures
             : base(TextureTarget.Texture2D, width, height)
         {
             // Create local buffer for data
-            _data = new float[width, height];
+            _data = new float[height, width];
 
             // If a clear value was specified, set each pixel to that value
             if (clear != 0f) {
                 for (int x = 0; x < Width; ++x) {
                     for (int y = 0; y < Height; ++y) {
-                        _data[x, y] = clear;
+                        _data[y, x] = clear;
                     }
                 }
 
@@ -66,10 +66,10 @@ namespace OpenTKTK.Textures
         /// <returns></returns>
         public float this[int x, int y]
         {
-            get { return _data[x, y]; }
+            get { return _data[y, x]; }
             set
             {
-                _data[x, y] = value;
+                _data[y, x] = value;
                 Invalidate();
             }
         }
