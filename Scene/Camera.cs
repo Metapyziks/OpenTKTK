@@ -290,8 +290,11 @@ namespace OpenTKTK.Scene
         /// </summary>
         public void InvalidateProjectionMatrix()
         {
+            OnInvalidateProjectionMatrix();
             _projChanged = true;
         }
+
+        protected virtual void OnInvalidateProjectionMatrix() { }
 
         /// <summary>
         /// Update the perspective matrix to reflect a change in viewport dimensions.
@@ -321,8 +324,11 @@ namespace OpenTKTK.Scene
         /// </summary>
         public void InvalidateViewMatrix()
         {
+            OnInvalidateViewMatrix();
             _viewChanged = true;
         }
+
+        protected virtual void OnInvalidateViewMatrix() { }
 
         /// <summary>
         /// Update the view matrix to reflect a change in camera position or rotation.

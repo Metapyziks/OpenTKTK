@@ -36,8 +36,8 @@ namespace OpenTKTK.Shaders
         {
             base.ConstructVertexShader(vert);
 
-            vert.AddUniform(ShaderVarType.Mat4, "view");
             vert.AddUniform(ShaderVarType.Mat4, "proj");
+            vert.AddUniform(ShaderVarType.Mat4, "view");
             vert.AddUniform(ShaderVarType.Vec3, "camera");
         }
 
@@ -45,8 +45,8 @@ namespace OpenTKTK.Shaders
         {
             base.ConstructVertexShader(frag);
 
-            frag.AddUniform(ShaderVarType.Mat4, "view");
             frag.AddUniform(ShaderVarType.Mat4, "proj");
+            frag.AddUniform(ShaderVarType.Mat4, "view");
             frag.AddUniform(ShaderVarType.Vec3, "camera");
         }
 
@@ -55,10 +55,10 @@ namespace OpenTKTK.Shaders
             base.OnBegin();
 
             if (Camera != null) {
-                var view = Camera.ViewMatrix;
                 var proj = Camera.ProjectionMatrix;
-                SetUniform("view", ref view);
+                var view = Camera.ViewMatrix;
                 SetUniform("proj", ref proj);
+                SetUniform("view", ref view);
                 SetUniform("camera", Camera.Position);
             }
         }
