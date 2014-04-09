@@ -56,7 +56,7 @@ namespace OpenTKTK.Shaders
 
             if (Camera != null) {
                 var view = Camera.ViewMatrix;
-                var proj = Camera.PerspectiveMatrix;
+                var proj = Camera.ProjectionMatrix;
                 SetUniform("view", ref view);
                 SetUniform("proj", ref proj);
                 SetUniform("camera", Camera.Position);

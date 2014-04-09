@@ -55,13 +55,11 @@ namespace OpenTKTK.Scene
         }
 
         #region Private Fields
-        private bool _perspectiveChanged;
+        private bool _projChanged;
         private bool _viewChanged;
-        private bool _combinedChanged;
 
-        private Matrix4 _perspectiveMatrix;
+        private Matrix4 _projMatrix;
         private Matrix4 _viewMatrix;
-        private Matrix4 _combinedMatrix;
         private Vector3 _position;
         private Vector2 _rotation;
         #endregion
@@ -82,7 +80,7 @@ namespace OpenTKTK.Scene
             set
             {
                 _fov = value;
-                _perspectiveChanged = true;
+                _projChanged = true;
             }
         }
 
@@ -92,7 +90,7 @@ namespace OpenTKTK.Scene
             set
             {
                 _zNear = value;
-                _perspectiveChanged = true;
+                _projChanged = true;
             }
         }
 
@@ -102,7 +100,7 @@ namespace OpenTKTK.Scene
             set
             {
                 _zFar = value;
-                _perspectiveChanged = true;
+                _projChanged = true;
             }
         }
 
@@ -110,13 +108,13 @@ namespace OpenTKTK.Scene
         /// Perspective matrix that encodes the transformation from
         /// eye-space to screen-space.
         /// </summary>
-        public Matrix4 PerspectiveMatrix
+        public Matrix4 ProjectionMatrix
         {
             get
             {
-                if (_perspectiveChanged) UpdatePerspectiveMatrix();
+                if (_projChanged) UpdateProjectionMatrix();
 
-                return _perspectiveMatrix;
+                return _projMatrix;
             }
         }
 
@@ -133,23 +131,7 @@ namespace OpenTKTK.Scene
                 return _viewMatrix;
             }
         }
-
-        /// <summary>
-        /// Combined view and perspective matrix that encodes the
-        /// transformation from world-space to screen-space.
-        /// </summary>
-        public Matrix4 CombinedMatrix
-        {
-            get
-            {
-                if (_perspectiveChanged) UpdatePerspectiveMatrix();
-                if (_viewChanged) UpdateViewMatrix();
-                if (_combinedChanged) UpdateCombinedMatrix();
-
-                return _combinedMatrix;
-            }
-        }
-
+        
         /// <summary>
         /// Position of the camera in the world.
         /// </summary>
@@ -286,7 +268,7 @@ namespace OpenTKTK.Scene
             _position = new Vector3();
             _rotation = new Vector2();
 
-            InvalidatePerspectiveMatrix();
+            InvalidateProjectionMatrix();
             InvalidateViewMatrix();
         }
 
@@ -300,26 +282,25 @@ namespace OpenTKTK.Scene
             Width = width;
             Height = height;
 
-            InvalidatePerspectiveMatrix();
+            InvalidateProjectionMatrix();
         }
 
         /// <summary>
         /// Mark the perspective matrix as requiring an update.
         /// </summary>
-        public void InvalidatePerspectiveMatrix()
+        public void InvalidateProjectionMatrix()
         {
-            _perspectiveChanged = true;
-            _combinedChanged = true;
+            _projChanged = true;
         }
 
         /// <summary>
         /// Update the perspective matrix to reflect a change in viewport dimensions.
         /// </summary>
-        private void UpdatePerspectiveMatrix()
+        private void UpdateProjectionMatrix()
         {
-            _perspectiveChanged = false;
+            _projChanged = false;
 
-            OnUpdatePerspectiveMatrix(ref _perspectiveMatrix);
+            OnUpdateProjectionMatrix(ref _projMatrix);
         }
 
         /// <summary>
@@ -327,7 +308,7 @@ namespace OpenTKTK.Scene
         /// outputs the new perspective matrix.
         /// </summary>
         /// <param name="matrix">The new up-to-date matrix</param>
-        protected virtual void OnUpdatePerspectiveMatrix(ref Matrix4 matrix)
+        protected virtual void OnUpdateProjectionMatrix(ref Matrix4 matrix)
         {
             // Set up a perspective matrix with a 60 degree FOV, the aspect ratio
             // of the current viewport dimensions, some arbitrary depth clip planes
@@ -341,7 +322,6 @@ namespace OpenTKTK.Scene
         public void InvalidateViewMatrix()
         {
             _viewChanged = true;
-            _combinedChanged = true;
         }
 
         /// <summary>
@@ -367,16 +347,6 @@ namespace OpenTKTK.Scene
 
             // Combine the matrices to find the view transformation
             matrix = Matrix4.Mult(trns, Matrix4.Mult(yRot, xRot));
-        }
-
-        /// <summary>
-        /// Update the combined view and perspective matrix when either of them changes.
-        /// </summary>
-        private void UpdateCombinedMatrix()
-        {
-            _combinedChanged = false;
-
-            _combinedMatrix = Matrix4.Mult(_viewMatrix, _perspectiveMatrix);
         }
 
         private void OnPositionChanged(PositionComponent component)
