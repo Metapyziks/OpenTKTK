@@ -30,7 +30,6 @@ namespace OpenTKTK.Textures
     public sealed class AlphaTexture2D : Texture
     {
         #region Private Fields
-        private readonly int _actualSize;
         private float[,] _data;
         #endregion
 
@@ -43,17 +42,14 @@ namespace OpenTKTK.Textures
         public AlphaTexture2D(int width, int height, float clear = 0f)
             : base(TextureTarget.Texture2D, width, height)
         {
-            // To be safe, always use a power of two width and height
-            _actualSize = MathHelper.NextPowerOfTwo(Math.Max(width, height));
-
             // Create local buffer for data
-            _data = new float[_actualSize, _actualSize];
+            _data = new float[height, width];
 
             // If a clear value was specified, set each pixel to that value
             if (clear != 0f) {
                 for (int x = 0; x < Width; ++x) {
                     for (int y = 0; y < Height; ++y) {
-                        _data[x, y] = clear;
+                        _data[y, x] = clear;
                     }
                 }
 
@@ -70,10 +66,10 @@ namespace OpenTKTK.Textures
         /// <returns></returns>
         public float this[int x, int y]
         {
-            get { return _data[x, y]; }
+            get { return _data[y, x]; }
             set
             {
-                _data[x, y] = value;
+                _data[y, x] = value;
                 Invalidate();
             }
         }
@@ -84,7 +80,7 @@ namespace OpenTKTK.Textures
         protected override void Load()
         {
             // Transfer from the local buffer to video memory
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Alpha, _actualSize, _actualSize, 0, OpenTK.Graphics.OpenGL.PixelFormat.Alpha, PixelType.Float, _data);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Alpha, Width, Height, 0, OpenTK.Graphics.OpenGL.PixelFormat.Alpha, PixelType.Float, _data);
 
             // This probably doesn't belong here - set the texture
             // filter and edge wrap modes
@@ -92,6 +88,7 @@ namespace OpenTKTK.Textures
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int) TextureMagFilter.Linear);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapR, (int) TextureWrapMode.Repeat);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int) TextureWrapMode.Repeat);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int) TextureWrapMode.Repeat);
         }
     }
 }
