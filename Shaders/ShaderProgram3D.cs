@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright (c) 2013 James King [metapyziks@gmail.com]
  *
  * This file is part of OpenTKTK.
