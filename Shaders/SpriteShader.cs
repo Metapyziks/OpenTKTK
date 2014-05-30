@@ -19,7 +19,6 @@
 
 using OpenTK.Graphics.OpenGL;
 
-using OpenTKTK.Shaders;
 using OpenTKTK.Textures;
 using OpenTKTK.Utils;
 
