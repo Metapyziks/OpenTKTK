@@ -280,6 +280,7 @@ namespace OpenTKTK.Utils
                 if (Tools.GL3)
                     logic = logic.Replace("texture2DArray(", "texture(")
                         .Replace("textureCube(", "texture(")
+                        .Replace("textureCubeLod(", "textureLod(")
                         .Replace("texture2D(", "texture(");
                 else
                     logic = logic.Replace(FragOutIdentifier, "gl_FragColor");
