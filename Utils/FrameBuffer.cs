@@ -88,7 +88,11 @@ namespace OpenTKTK.Utils
             // Assign the texture to the frame buffer
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, FboID);
             GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, tex.TextureTarget, tex.TextureID, 0);
-            GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, RenderbufferTarget.Renderbuffer, _depthBufferID);
+
+            if (depthBits > 0) {
+                GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, RenderbufferTarget.Renderbuffer, _depthBufferID);
+            }
+                
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
 
             Tools.ErrorCheck("fbo_init");

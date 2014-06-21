@@ -144,6 +144,17 @@ namespace OpenTKTK.Textures
             Tools.ErrorCheck("loadtexture");
         }
 
+        public void Download()
+        {
+            Bind();
+
+            if (Dirty) Load();
+
+            var data = Bitmap.LockBits(new Rectangle(0, 0, Width, Height), ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            GL.GetTexImage(TextureTarget.Texture2D, 0, OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, data.Scan0);
+            Bitmap.UnlockBits(data);
+        }
+
         public override void Dispose()
         {
             base.Dispose();
