@@ -127,9 +127,26 @@ namespace OpenTKTK.Utils
         /// </summary>
         public void Dispose()
         {
+            Dispose(true);
+        }
+
+        /// <summary>
+        /// Dispose of any unmanaged resources.
+        /// </summary>
+        public void Dispose(bool disposeTexture)
+        {
             if (_fboID != 0) {
                 GL.DeleteFramebuffer(_fboID);
                 _fboID = 0;
+            }
+
+            if (_depthBufferID != 0) {
+                GL.DeleteRenderbuffer(_depthBufferID);
+                _depthBufferID = 0;
+            }
+
+            if (disposeTexture) {
+                Texture.Dispose();
             }
         }
     }
